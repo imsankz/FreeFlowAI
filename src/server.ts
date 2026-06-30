@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { ChatCompletionRequest, ImageGenerationRequest } from './types.js';
 import { routeRequest } from './router.js';
 import { routeImageRequest } from './image_router.js';
@@ -22,6 +23,10 @@ initializeMetricsTracker().catch(error => {
 });
 
 const app = new Hono();
+
+// Serve static files from public directory
+app.use('/static/*', serveStatic({ root: './public' }));
+app.get('/dashboard', serveStatic({ path: './public/index.html' }));
 
 // Register skills
 UpdateModelsSkill.register(app);

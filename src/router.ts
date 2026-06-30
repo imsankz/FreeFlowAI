@@ -182,8 +182,25 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
               const latency = Date.now() - startTime;
               console.log(`[${new Date().toISOString()}] model_requested=${originalModel} tier_used=${tier.name} latency_ms=${latency} status=success`);
 
+              // Calculate tokens saved for streaming response (tokens used not available in stream)
+              const COST_PER_1K_TOKENS: Record<string, number> = {
+                'gpt-4': 0.03,
+                'gpt-4-turbo': 0.01,
+                'gpt-3.5-turbo': 0.0015,
+                'groq': 0,
+                'requesty': 0,
+                'openrouter': 0,
+                'huggingface': 0,
+                'gemini': 0,
+                'fallback': 0
+              };
+
+              const paidCostPerToken = (COST_PER_1K_TOKENS[originalModel] || 0.03) / 1000;
+              const freeCostPerToken = (COST_PER_1K_TOKENS[tier.name] || 0) / 1000;
+              const tokensSaved = 0 * (paidCostPerToken - freeCostPerToken); // 0 tokens used in stream
+
               // Record metrics for streaming response (tokens used not available in stream)
-              metricsTracker.recordCall(tier.name, originalModel, 0);
+              metricsTracker.recordCall(tier.name, originalModel, 0, tokensSaved);
             } catch (err) {
               const latency = Date.now() - startTime;
               console.error(`[${new Date().toISOString()}] Stream interrupted on tier ${tier.name}: ${err}`);
@@ -236,8 +253,25 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
         console.warn(`[${new Date().toISOString()}] Failed to parse response for metrics: ${parseError}`);
       }
 
+      // Calculate tokens saved (difference between paid model cost and free model cost)
+      const COST_PER_1K_TOKENS: Record<string, number> = {
+        'gpt-4': 0.03,
+        'gpt-4-turbo': 0.01,
+        'gpt-3.5-turbo': 0.0015,
+        'groq': 0,
+        'requesty': 0,
+        'openrouter': 0,
+        'huggingface': 0,
+        'gemini': 0,
+        'fallback': 0
+      };
+
+      const paidCostPerToken = (COST_PER_1K_TOKENS[originalModel] || 0.03) / 1000;
+      const freeCostPerToken = (COST_PER_1K_TOKENS[tier.name] || 0) / 1000;
+      const tokensSaved = tokensUsed * (paidCostPerToken - freeCostPerToken);
+
       // Record metrics
-      metricsTracker.recordCall(tier.name, originalModel, tokensUsed);
+      metricsTracker.recordCall(tier.name, originalModel, tokensUsed, tokensSaved);
 
       const responseHeaders = new Headers();
       responseHeaders.set('Content-Type', 'application/json');
