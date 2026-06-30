@@ -237,9 +237,9 @@ app.get('/dashboard', (c) => {
 
     async function fetchMetrics() {
       try {
-        const response = await fetch(`${API_BASE}/metrics`);
+        const response = await fetch('' + API_BASE + '/metrics');
         if (!response.ok) {
-          throw new Error(\`HTTP error! status: \${response.status}\`);
+          throw new Error('HTTP error! status: ' + response.status);
         }
         const data = await response.json();
         renderMetrics(data);
@@ -252,8 +252,8 @@ app.get('/dashboard', (c) => {
       // Total metrics
       document.getElementById('totalCalls').textContent = data.totalCalls;
       document.getElementById('totalTokens').textContent = data.totalTokensUsed;
-      document.getElementById('totalSaved').textContent = \`\$\${data.totalTokensSaved.toFixed(4)}\`;
-      document.getElementById('totalCost').textContent = \`\$\${data.totalCost.toFixed(4)}\`;
+      document.getElementById('totalSaved').textContent = '$' + data.totalTokensSaved.toFixed(4);
+      document.getElementById('totalCost').textContent = '$' + data.totalCost.toFixed(4);
 
       // Last updated
       document.getElementById('lastUpdated').textContent = new Date(data.lastUpdated).toLocaleString();
@@ -278,7 +278,7 @@ app.get('/dashboard', (c) => {
     }
 
     function renderTable(tableId, data) {
-      const tbody = document.querySelector(\`#\${tableId} tbody\`);
+      const tbody = document.querySelector('#' + tableId + ' tbody');
       tbody.innerHTML = '';
 
       Object.entries(data).forEach(([key, value]) => {
@@ -287,7 +287,7 @@ app.get('/dashboard', (c) => {
         const valueCell = row.insertCell();
         keyCell.textContent = key;
         // Format cost values with $ and 4 decimal places
-        valueCell.textContent = tableId.includes('cost') ? \`\$\${value.toFixed(4)}\` : value;
+        valueCell.textContent = tableId.includes('cost') ? '$' + value.toFixed(4) : value;
       });
     }
 
@@ -309,12 +309,12 @@ app.get('/dashboard', (c) => {
       }
 
       try {
-        const response = await fetch(`${API_BASE}/metrics/reset`, {
+        const response = await fetch('' + API_BASE + '/metrics/reset', {
           method: 'POST'
         });
 
         if (!response.ok) {
-          throw new Error(\`HTTP error! status: \${response.status}\`);
+          throw new Error('HTTP error! status: ' + response.status);
         }
 
         fetchMetrics();
