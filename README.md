@@ -28,6 +28,25 @@ To use FreeFlowAI, you need to obtain API keys for the AI providers you want to 
 4. Create a new API key
 5. Add to `.env` as `OPENROUTER_API_KEY`
 
+#### Multiple Models (Load Balancing)
+FreeFlowAI supports load balancing across multiple OpenRouter models using round-robin. By default, it uses a list of popular models. You can customize this list:
+
+```bash
+# .env file (comma-separated model IDs)
+OPENROUTER_MODELS="meta-llama/llama-3-8b-instruct,nousresearch/hermes-2-pro-mistral-7b,mistralai/mistral-7b-instruct-v0.2,google/gemini-1.5-flash-001,anthropic/claude-3-haiku-20240307"
+```
+
+#### Single Model
+If you only want to use one specific OpenRouter model:
+
+```bash
+# .env file
+OPENROUTER_MODELS="meta-llama/llama-3-8b-instruct"
+```
+
+#### Note on Free Tier
+OpenRouter's free tier availability may vary over time. If you encounter model not found errors, check the [OpenRouter Models](https://openrouter.ai/models) page for the latest available models and update your configuration accordingly.
+
 ### Hugging Face API Key
 1. Visit [Hugging Face](https://huggingface.co/)
 2. Sign up or log in
