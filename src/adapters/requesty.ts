@@ -1,4 +1,5 @@
 import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
+import { freeModelsManager } from '../free-models-manager.js';
 
 /**
  * Requesty AI Router Adapter
@@ -7,33 +8,19 @@ import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
  * Supports various free tier models.
  */
 
-// List of free Requesty AI models (default if REQUESTY_MODELS not configured)
-// Note: nemotron-3-ultra-550b-a55b may not be available
-const DEFAULT_REQUESTY_MODELS = [
-  'nemotron-3-super-120b-a12b',
-  'gemma-4-31b-it',
-  'nemotron-3-nano-omni-30b-a3b-reasoning',
-  'nemotron-3-nano-30b-a3b',
-  'nemotron-3.5-content-safety',
-  'laguna-m.1',
-  'laguna-xs.2'
-];
-
-// Load configured models from environment variable
-const getRequestyModels = (): string[] => {
-  const configured = process.env.REQUESTY_MODELS;
-  if (configured) {
-    return configured.split(',').map(model => model.trim()).filter(model => model.length > 0);
-  }
-  return DEFAULT_REQUESTY_MODELS;
-};
-
 // Round-robin counter for model selection
 let modelIndex = 0;
 
 // Get next model using round-robin
 const getNextRequestyModel = (): string => {
-  const models = getRequestyModels();
+  const models = freeModelsManager.getModelsByProvider('requesty')
+    .filter(model => model.available)
+    .map(model => model.modelId);
+
+  if (models.length === 0) {
+    throw new Error('No available Requesty AI models');
+  }
+
   const model = models[modelIndex % models.length];
   modelIndex++;
   return model;

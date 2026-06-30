@@ -1,4 +1,5 @@
 import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
+import { freeModelsManager } from '../free-models-manager.js';
 
 /**
  * Groq Cloud Tier Adapter
@@ -7,28 +8,19 @@ import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
  * Free tier includes models like Llama 3.3 70B and Mixtral.
  */
 
-// List of free Groq models (default if GROQ_MODELS not configured)
-const DEFAULT_GROQ_MODELS = [
-  'llama-3.3-70b-versatile',
-  'llama-3.1-8b-instant',
-  'qwen/qwen3.6-27b'
-];
-
-// Load configured models from environment variable
-const getGroqModels = (): string[] => {
-  const configured = process.env.GROQ_MODELS;
-  if (configured) {
-    return configured.split(',').map(model => model.trim()).filter(model => model.length > 0);
-  }
-  return DEFAULT_GROQ_MODELS;
-};
-
 // Round-robin counter for model selection
 let modelIndex = 0;
 
 // Get next model using round-robin
 const getNextGroqModel = (): string => {
-  const models = getGroqModels();
+  const models = freeModelsManager.getModelsByProvider('groq')
+    .filter(model => model.available)
+    .map(model => model.modelId);
+
+  if (models.length === 0) {
+    throw new Error('No available Groq models');
+  }
+
   const model = models[modelIndex % models.length];
   modelIndex++;
   return model;
@@ -63,6 +55,7 @@ export const executeGroq: ExecuteTierFunction = async (req, signal) => {
       // If model not found or unavailable, try to list available models
       if (response.status === 404 || response.status === 400) {
         console.warn(`Model ${targetModel} not available, attempting to find another model...`);
+        freeModelsManager.updateModelAvailability('groq', targetModel, false);
         throw new Error(`Model ${targetModel} not available on Groq`);
       }
       throw new Error(`Groq HTTP error: ${response.status} - ${response.statusText}`);

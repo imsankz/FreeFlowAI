@@ -3,12 +3,22 @@ import { Hono } from 'hono';
 import { ChatCompletionRequest, ImageGenerationRequest } from './types.js';
 import { routeRequest } from './router.js';
 import { routeImageRequest } from './image_router.js';
+import { initializeFreeModelsManager } from './free-models-manager.js';
+import { UpdateModelsSkill } from './skills/update-models.js';
 import * as dotenv from 'dotenv';
 
 // Load environment variables for local development
 dotenv.config();
 
+// Initialize free models manager
+initializeFreeModelsManager().catch(error => {
+  console.error('[Server] Failed to initialize free models manager:', error);
+});
+
 const app = new Hono();
+
+// Register skills
+UpdateModelsSkill.register(app);
 
 app.post('/v1/chat/completions', async (c) => {
   try {
