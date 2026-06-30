@@ -45,7 +45,7 @@ app.post('/api/metrics/reset', (c) => {
 app.post('/v1/chat/completions', async (c) => {
   try {
     const reqBody = await c.req.json<ChatCompletionRequest>();
-    
+
     // Validate required OpenAI fields
     if (!reqBody.messages || !Array.isArray(reqBody.messages)) {
       return c.json({
@@ -55,10 +55,10 @@ app.post('/v1/chat/completions', async (c) => {
         }
       }, 400);
     }
-    
+
     // Delegate to the resilient cascade router
     return await routeRequest(reqBody, c);
-    
+
   } catch (err: any) {
     console.error(`[${new Date().toISOString()}] Bad Request or Parser Error: ${err.message}`);
     return c.json({
@@ -119,7 +119,7 @@ app.get('/', (c) => {
     <body>
       <h1>FreeFlowAI is running 🟢</h1>
       <p>This is a zero-config, self-healing free-tier maximizer proxy.</p>
-      
+
       <h2>APIs Supported:</h2>
       <ul>
         <li><code>POST /v1/chat/completions</code></li>
@@ -148,7 +148,7 @@ app.get('/', (c) => {
 });
 
 /**
- * Configure the server port. 
+ * Configure the server port.
  * While the user requested 8080 as default, this environment forces port 3000.
  * We prioritize process.env.PORT (injected infra) or default to 3000 to prevent crash.
  */

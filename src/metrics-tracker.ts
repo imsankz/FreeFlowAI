@@ -1,5 +1,9 @@
-import { config } from 'dotenv';
-config();
+// Load environment variables only for local development (not Edge Runtime)
+if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production') {
+  import('dotenv').then((dotenvModule) => {
+    dotenvModule.config();
+  });
+}
 
 /**
  * Interface for metrics data
