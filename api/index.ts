@@ -413,11 +413,11 @@ app.get('/health', (c) => c.json({ status: 'ok' }));
 
 // Serve favicon
 app.get('/favicon.ico', (c) => {
-  return new Response(null, { status: 204 });
+  return c.body(null, 204);
 });
 
 app.get('/favicon.png', (c) => {
-  return new Response(null, { status: 204 });
+  return c.body(null, 204);
 });
 
 // Root endpoint for browser preview
