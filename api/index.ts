@@ -411,6 +411,15 @@ app.post('/v1/images/generations', async (c) => {
 // Basic health check for container probes
 app.get('/health', (c) => c.json({ status: 'ok' }));
 
+// Serve favicon
+app.get('/favicon.ico', (c) => {
+  return c.text('', 204);
+});
+
+app.get('/favicon.png', (c) => {
+  return c.text('', 204);
+});
+
 // Root endpoint for browser preview
 app.get('/', (c) => {
   return c.html(`
