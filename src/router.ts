@@ -14,14 +14,14 @@ import { executeFallback } from './adapters/fallback.js';
 export function getEnabledTiers(): TierConfig[] {
   return [
     {
-      name: 'requesty',
-      enabled: !!process.env.REQUESTY_API_KEY,
-      execute: executeRequesty,
-    },
-    {
       name: 'groq',
       enabled: !!process.env.GROQ_API_KEY,
       execute: executeGroq,
+    },
+    {
+      name: 'requesty',
+      enabled: !!process.env.REQUESTY_API_KEY,
+      execute: executeRequesty,
     },
     {
       name: 'openrouter',
