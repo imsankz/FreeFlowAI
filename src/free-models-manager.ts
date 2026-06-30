@@ -63,9 +63,6 @@ export class FreeModelsManager {
       // For now, we'll use the default configuration
       console.log('[FreeModelsManager] Loading models from external source...');
 
-      // Simulate fetching from API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
       // For now, use default models
       this.models = DEFAULT_PROVIDER_MODELS;
       this.lastUpdated = new Date();
@@ -184,9 +181,9 @@ export const freeModelsManager = new FreeModelsManager();
 export async function initializeFreeModelsManager(): Promise<void> {
   await freeModelsManager.loadModelsFromExternalSource();
 
-  // Start periodic updates
-  const updateInterval = process.env.FREE_MODELS_UPDATE_INTERVAL_MINUTES;
-  if (updateInterval) {
+  // Start periodic updates only in Node.js runtime (not Edge)
+  if (typeof process !== 'undefined' && process.env && process.env.FREE_MODELS_UPDATE_INTERVAL_MINUTES) {
+    const updateInterval = process.env.FREE_MODELS_UPDATE_INTERVAL_MINUTES;
     freeModelsManager.startPeriodicUpdates(parseInt(updateInterval));
   }
 }
