@@ -6,6 +6,7 @@ import { executeOpenRouter } from './adapters/openrouter.js';
 import { executeHuggingFace } from './adapters/huggingface.js';
 import { executeGemini } from './adapters/gemini.js';
 import { executeFallback } from './adapters/fallback.js';
+import { metricsTracker } from './metrics-tracker.js';
 
 /**
  * The prioritized list of all available tiers. 
@@ -180,6 +181,9 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
               controller.close();
               const latency = Date.now() - startTime;
               console.log(`[${new Date().toISOString()}] model_requested=${originalModel} tier_used=${tier.name} latency_ms=${latency} status=success`);
+
+              // Record metrics for streaming response (tokens used not available in stream)
+              metricsTracker.recordCall(tier.name, originalModel, 0);
             } catch (err) {
               const latency = Date.now() - startTime;
               console.error(`[${new Date().toISOString()}] Stream interrupted on tier ${tier.name}: ${err}`);
@@ -218,7 +222,23 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
       // Handle standard non-streaming successful response
       const latency = Date.now() - startTime;
       console.log(`[${new Date().toISOString()}] model_requested=${originalModel} tier_used=${tier.name} latency_ms=${latency} status=success`);
-      
+
+      // Parse response to get token usage
+      let tokensUsed = 0;
+      let responseBody = null;
+      try {
+        const responseText = await response.text();
+        responseBody = JSON.parse(responseText);
+        if (responseBody.usage && responseBody.usage.total_tokens) {
+          tokensUsed = responseBody.usage.total_tokens;
+        }
+      } catch (parseError) {
+        console.warn(`[${new Date().toISOString()}] Failed to parse response for metrics: ${parseError}`);
+      }
+
+      // Record metrics
+      metricsTracker.recordCall(tier.name, originalModel, tokensUsed);
+
       const responseHeaders = new Headers();
       responseHeaders.set('Content-Type', 'application/json');
 
@@ -227,8 +247,8 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
         tierStates[tier.name].consecutiveFailures = 0;
         tierStates[tier.name].disabledUntil = 0;
       }
-      
-      return new Response(response.body, {
+
+      return new Response(responseBody ? JSON.stringify(responseBody) : response.body, {
         status: response.status,
         headers: responseHeaders,
       });

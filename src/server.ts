@@ -5,6 +5,7 @@ import { routeRequest } from './router.js';
 import { routeImageRequest } from './image_router.js';
 import { initializeFreeModelsManager } from './free-models-manager.js';
 import { UpdateModelsSkill } from './skills/update-models.js';
+import { initializeMetricsTracker, metricsTracker } from './metrics-tracker.js';
 import * as dotenv from 'dotenv';
 
 // Load environment variables for local development
@@ -15,10 +16,26 @@ initializeFreeModelsManager().catch(error => {
   console.error('[Server] Failed to initialize free models manager:', error);
 });
 
+// Initialize metrics tracker
+initializeMetricsTracker().catch(error => {
+  console.error('[Server] Failed to initialize metrics tracker:', error);
+});
+
 const app = new Hono();
 
 // Register skills
 UpdateModelsSkill.register(app);
+
+// Metrics endpoints
+app.get('/api/metrics', (c) => {
+  const metrics = metricsTracker.getMetrics();
+  return c.json(metrics);
+});
+
+app.post('/api/metrics/reset', (c) => {
+  metricsTracker.resetMetrics();
+  return c.json({ success: true, message: 'Metrics reset' });
+});
 
 app.post('/v1/chat/completions', async (c) => {
   try {
