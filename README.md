@@ -21,6 +21,18 @@ Copy the source code directly into your repository to package it along with your
 
 To use FreeFlowAI, you need to obtain API keys for the AI providers you want to use. Here's how to get them:
 
+### Requesty AI API Key (Free Tier)
+1. Visit [Requesty AI](https://requesty.ai/)
+2. Sign up or log in
+3. Go to API Keys section
+4. Create a new API key
+5. Add to `.env` as `REQUESTY_API_KEY`
+
+**Free Tier Details:**
+- **Models:** xai/grok-4, various open-source models
+- **Base URL:** https://router.requesty.ai/v1/chat/completions
+- **API Key Format:** `rqsty-sk-...`
+
 ### Groq Cloud API Key (Recommended for Speed)
 1. Visit [Groq Cloud](https://console.groq.com/)
 2. Sign up or log in (no credit card required for free tier)
