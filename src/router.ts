@@ -1,9 +1,10 @@
 import { Context } from 'hono';
 import { ChatCompletionRequest, ProxyError, TierConfig, ExecuteTierFunction, TierFailure } from './types.js';
+import { executeRequesty } from './adapters/requesty.js';
+import { executeGroq } from './adapters/groq.js';
 import { executeOpenRouter } from './adapters/openrouter.js';
 import { executeHuggingFace } from './adapters/huggingface.js';
 import { executeGemini } from './adapters/gemini.js';
-import { executeGroq } from './adapters/groq.js';
 import { executeFallback } from './adapters/fallback.js';
 
 /**
@@ -12,6 +13,11 @@ import { executeFallback } from './adapters/fallback.js';
  */
 export function getEnabledTiers(): TierConfig[] {
   return [
+    {
+      name: 'requesty',
+      enabled: !!process.env.REQUESTY_API_KEY,
+      execute: executeRequesty,
+    },
     {
       name: 'groq',
       enabled: !!process.env.GROQ_API_KEY,
@@ -47,6 +53,7 @@ interface TierState {
 }
 
 const tierStates: Record<string, TierState> = {
+  requesty: { consecutiveFailures: 0, disabledUntil: 0 },
   groq: { consecutiveFailures: 0, disabledUntil: 0 },
   openrouter: { consecutiveFailures: 0, disabledUntil: 0 },
   huggingface: { consecutiveFailures: 0, disabledUntil: 0 },
