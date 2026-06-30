@@ -21,6 +21,32 @@ Copy the source code directly into your repository to package it along with your
 
 To use FreeFlowAI, you need to obtain API keys for the AI providers you want to use. Here's how to get them:
 
+### Groq Cloud API Key (Recommended for Speed)
+1. Visit [Groq Cloud](https://console.groq.com/)
+2. Sign up or log in (no credit card required for free tier)
+3. Go to [API Keys](https://console.groq.com/keys)
+4. Create a new API key
+5. Add to `.env` as `GROQ_API_KEY`
+
+**Free Tier Details:**
+- **Models:** Llama 3.3 70B, Mixtral 8x7B, Llama 3.1 8B
+- **Limits:** 30 requests per minute (RPM), 1,000 requests per day (RPD)
+- **Speed:** Blazing fast inference (up to 100x faster than other free tiers)
+
+#### Multiple Models (Load Balancing)
+```bash
+# .env file
+GROQ_API_KEY="your-groq-api-key"
+GROQ_MODELS="llama3-70b-8192,mixtral-8x7b-32768,llama3-8b-8192"
+```
+
+#### Single Model
+```bash
+# .env file
+GROQ_API_KEY="your-groq-api-key"
+GROQ_MODELS="llama3-70b-8192"
+```
+
 ### OpenRouter API Key
 1. Visit [OpenRouter.ai](https://openrouter.ai/)
 2. Sign up or log in

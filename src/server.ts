@@ -96,6 +96,7 @@ app.get('/', (c) => {
 
       <h3>Configured Chat Tiers:</h3>
       <ul>
+        <li>Groq: ${process.env.GROQ_API_KEY ? '✅ Enabled' : '❌ Disabled'}</li>
         <li>OpenRouter: ${process.env.OPENROUTER_API_KEY ? '✅ Enabled' : '❌ Disabled'}</li>
         <li>HuggingFace: ${process.env.HF_API_KEY ? '✅ Enabled' : '❌ Disabled'}</li>
         <li>Gemini: ${process.env.GEMINI_API_KEY ? '✅ Enabled' : '❌ Disabled'}</li>

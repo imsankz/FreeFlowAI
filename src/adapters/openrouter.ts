@@ -7,14 +7,10 @@ import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
  * through, swapping out the model to the free tier target.
  */
 
-// List of OpenRouter models that are typically available for free
-// Note: Free tier availability may change over time
+// List of OpenRouter models that are typically available
+// Note: Availability may change over time
 const DEFAULT_OPENROUTER_MODELS = [
-  'meta-llama/llama-3-8b-instruct',
-  'nousresearch/hermes-2-pro-mistral-7b',
-  'mistralai/mistral-7b-instruct-v0.2',
-  'google/gemini-1.5-flash-001',
-  'anthropic/claude-3-haiku-20240307'
+  'meta-llama/llama-3-8b-instruct'
 ];
 
 // Load configured models from environment variable
