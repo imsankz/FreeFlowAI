@@ -8,8 +8,8 @@ import { ChatCompletionRequest, ExecuteTierFunction } from '../types.js';
  */
 
 // List of free Requesty AI models (default if REQUESTY_MODELS not configured)
+// Note: nemotron-3-ultra-550b-a55b may not be available
 const DEFAULT_REQUESTY_MODELS = [
-  'nemotron-3-ultra-550b-a55b',
   'nemotron-3-super-120b-a12b',
   'gemma-4-31b-it',
   'nemotron-3-nano-omni-30b-a3b-reasoning',
