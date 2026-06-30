@@ -1,0 +1,1 @@
+{"name":"Resilient AI Proxy Server","description":"Zero-Config, Self-Healing Free-Tier Maximizer. An OpenAI-compatible API proxy server written in Node.js (TypeScript) using Hono that cascades across free-tier inference APIs with self-healing stream resiliency.","requestFramePermissions":[],"majorCapabilities":["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]}

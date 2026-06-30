@@ -1,0 +1,18 @@
+name = "freeflow-ai"
+main = "src/server.ts"
+compatibility_date = "2024-01-01"
+
+# Environment Variables that can be set as public variables
+# Do NOT put secret API keys here. Use `wrangler secret put <KEY_NAME>` instead.
+[vars]
+# PORT is not used on Cloudflare Workers
+NODE_ENV = "production"
+
+# For deploying, run:
+# 1. npm install -g wrangler (if not installed)
+# 2. wrangler login
+# 3. wrangler secret put OPENROUTER_API_KEY
+# 4. wrangler secret put HF_API_KEY
+# 5. wrangler secret put GEMINI_API_KEY
+# 6. wrangler secret put PROXY_SECRET_TOKEN  # optional custom auth token
+# 7. wrangler deploy
