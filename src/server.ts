@@ -154,7 +154,7 @@ app.get('/', (c) => {
  * While the user requested 8080 as default, this environment forces port 3000.
  * We prioritize process.env.PORT (injected infra) or default to 3000 to prevent crash.
  */
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8787;
 
 console.log(`[${new Date().toISOString()}] Zero-Config API Proxy starting on port ${port}...`);
 

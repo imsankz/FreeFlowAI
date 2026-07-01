@@ -141,7 +141,7 @@ Build and run the container locally or push it to any cloud container service:
   ```
 * **Run**:
   ```bash
-  docker run -p 3000:3000 \
+  docker run -p 8787:8787 \
     -e GEMINI_API_KEY="your-key" \
     -e OPENROUTER_API_KEY="your-key" \
     -e HF_API_KEY="your-key" \
@@ -187,7 +187,7 @@ The agent will run the uninstallation script, restoring all modified files back 
 
 ## How to Use It manually
 
-Once your server is running (either locally at `http://localhost:3000` or hosted on Cloudflare Workers), point any standard OpenAI SDK or HTTP client to it. The proxy ignores the requested model and cascades through the enabled free-tier models.
+Once your server is running (either locally at `http://localhost:8787` or hosted on Cloudflare Workers), point any standard OpenAI SDK or HTTP client to it. The proxy ignores the requested model and cascades through the enabled free-tier models.
 
 ### Example using the official OpenAI SDK:
 
@@ -195,7 +195,7 @@ Once your server is running (either locally at `http://localhost:3000` or hosted
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL: "http://localhost:3000/v1",             // Point to your proxy URL
+  baseURL: "http://localhost:8787/v1",             // Point to your proxy URL
   apiKey: process.env.FREEFLOW_PROXY_TOKEN || "none", // Proxy authentication
 });
 
