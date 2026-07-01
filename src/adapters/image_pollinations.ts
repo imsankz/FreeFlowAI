@@ -37,7 +37,7 @@ export const executeImagePollinations: ExecuteImageTierFunction = async (req, si
       throw new Error(`Pollinations HTTP error: ${response.status} - ${response.statusText}`);
     }
     const arrayBuffer = await response.arrayBuffer();
-    const base64Data = Buffer.from(arrayBuffer).toString('base64');
+    const base64Data = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
     responseData.data.push({
       b64_json: base64Data
     });

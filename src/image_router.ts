@@ -4,26 +4,25 @@ import { executeImageHuggingFace } from './adapters/image_huggingface.js';
 import { executeImagePollinations } from './adapters/image_pollinations.js';
 import { executeImageFallback } from './adapters/image_fallback.js';
 
-/**
- * Image Generation Tiers configuration.
- */
-export const imageTiers: ImageTierConfig[] = [
-  {
-    name: 'huggingface',
-    enabled: !!process.env.HF_API_KEY,
-    execute: executeImageHuggingFace,
-  },
-  {
-    name: 'pollinations',
-    enabled: true, // Completely free, no API key required
-    execute: executeImagePollinations,
-  },
-  {
-    name: 'fallback',
-    enabled: !!(process.env.FALLBACK_IMAGE_API_KEY && process.env.FALLBACK_IMAGE_BASE_URL && process.env.FALLBACK_IMAGE_MODEL),
-    execute: executeImageFallback,
-  },
-];
+function getEnabledImageTiers(): ImageTierConfig[] {
+  return [
+    {
+      name: 'huggingface',
+      enabled: !!process.env.HF_API_KEY,
+      execute: executeImageHuggingFace,
+    },
+    {
+      name: 'pollinations',
+      enabled: true,
+      execute: executeImagePollinations,
+    },
+    {
+      name: 'fallback',
+      enabled: !!(process.env.FALLBACK_IMAGE_API_KEY && process.env.FALLBACK_IMAGE_BASE_URL && process.env.FALLBACK_IMAGE_MODEL),
+      execute: executeImageFallback,
+    },
+  ].filter(t => t.enabled);
+}
 
 // Circuit Breaker State for Image Tiers
 interface ImageTierState {
@@ -69,7 +68,7 @@ async function executeWithTimeout(
  * Core Cascade Engine for Image Generation
  */
 export async function routeImageRequest(req: ImageGenerationRequest, c: Context): Promise<Response> {
-  const enabledTiers = imageTiers.filter((t) => t.enabled);
+  const enabledTiers = getEnabledImageTiers();
 
   if (enabledTiers.length === 0) {
     const errObj: ProxyError = {
