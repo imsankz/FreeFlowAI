@@ -42,6 +42,8 @@ const DEFAULT_PROVIDER_MODELS: ProviderModels = {
     { name: 'qwen/qwen3.6-27b', provider: 'groq', modelId: 'qwen/qwen3.6-27b', available: true, description: 'Qwen 3.6 27B' }
   ],
   openrouter: [
+    { name: 'cohere/north-mini-code:free', provider: 'openrouter', modelId: 'cohere/north-mini-code:free', available: true, description: 'Cohere North Mini Code (free)' },
+    { name: 'nvidia/nemotron-3.5-content-safety:free', provider: 'openrouter', modelId: 'nvidia/nemotron-3.5-content-safety:free', available: true, description: 'NVIDIA Nemotron 3.5 Content Safety (free)' },
     { name: 'meta-llama/llama-3-8b-instruct', provider: 'openrouter', modelId: 'meta-llama/llama-3-8b-instruct', available: true, description: 'Llama 3 8B Instruct' }
   ]
 };
