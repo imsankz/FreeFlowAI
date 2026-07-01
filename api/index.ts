@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { ChatCompletionRequest, ImageGenerationRequest } from '../src/types.js';
+// ImageGenerationRequest used below in /v1/images/generations route
 import { routeRequest } from '../src/router.js';
 import { routeImageRequest } from '../src/image_router.js';
 import { initializeFreeModelsManager } from '../src/free-models-manager.js';
@@ -130,7 +131,7 @@ app.get('/dashboard', (c) => {
       </div>
       <div class="metric-card">
         <div class="metric-value" id="totalSaved">0</div>
-        <div class="metric-label">Tokens Saved</div>
+        <div class="metric-label">Cost Saved</div>
       </div>
       <div class="metric-card">
         <div class="metric-value" id="totalCost">$0.00</div>
@@ -295,12 +296,6 @@ app.get('/dashboard', (c) => {
       const errorDiv = document.getElementById('error');
       errorDiv.textContent = message;
       errorDiv.style.display = 'block';
-    }
-
-    function hideError() {
-      const errorDiv = document.getElementById('error');
-      errorDiv.textContent = '';
-      errorDiv.style.display = 'none';
     }
 
     async function resetMetrics() {

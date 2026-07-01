@@ -52,7 +52,7 @@ const DEFAULT_PROVIDER_MODELS: ProviderModels = {
 export class FreeModelsManager {
   private models: ProviderModels = DEFAULT_PROVIDER_MODELS;
   private lastUpdated: Date = new Date();
-  private updateInterval: NodeJS.Timeout | null = null;
+  private updateInterval: ReturnType<typeof setInterval> | null = null;
 
   /**
    * Load models from external source (e.g., API, JSON file, etc.)
@@ -184,6 +184,6 @@ export async function initializeFreeModelsManager(): Promise<void> {
   // Start periodic updates only in Node.js runtime (not Edge)
   if (typeof process !== 'undefined' && process.env && process.env.FREE_MODELS_UPDATE_INTERVAL_MINUTES) {
     const updateInterval = process.env.FREE_MODELS_UPDATE_INTERVAL_MINUTES;
-    freeModelsManager.startPeriodicUpdates(parseInt(updateInterval));
+    freeModelsManager.startPeriodicUpdates(parseInt(updateInterval, 10));
   }
 }

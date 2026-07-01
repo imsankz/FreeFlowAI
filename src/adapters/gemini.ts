@@ -21,7 +21,7 @@ async function resolveImageUrl(url: string): Promise<{ mimeType: string; base64D
   }
   const contentType = res.headers.get('content-type') || 'image/jpeg';
   const arrayBuffer = await res.arrayBuffer();
-  const base64Data = Buffer.from(arrayBuffer).toString('base64');
+  const base64Data = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
   return {
     mimeType: contentType,
     base64Data,
@@ -73,10 +73,7 @@ async function translateToGeminiContents(messages: ChatMessage[]) {
   for (const msg of messages) {
     const parts = await translateContentToParts(msg.content);
     if (msg.role === 'system') {
-      systemInstruction = {
-        role: 'user', // Gemini system instructions use 'user' role parts
-        parts
-      };
+      systemInstruction = { parts };
     } else {
       contents.push({
         role: msg.role === 'assistant' ? 'model' : 'user',

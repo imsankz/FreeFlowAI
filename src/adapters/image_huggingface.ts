@@ -32,7 +32,7 @@ export const executeImageHuggingFace: ExecuteImageTierFunction = async (req, sig
 
   const contentType = response.headers.get('content-type') || 'image/jpeg';
   const arrayBuffer = await response.arrayBuffer();
-  const base64Data = Buffer.from(arrayBuffer).toString('base64');
+  const base64Data = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
 
   const format = req.response_format || 'url';
   const responseData: ImageGenerationResponse = {

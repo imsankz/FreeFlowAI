@@ -182,25 +182,8 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
               const latency = Date.now() - startTime;
               console.log(`[${new Date().toISOString()}] model_requested=${originalModel} tier_used=${tier.name} latency_ms=${latency} status=success`);
 
-              // Calculate tokens saved for streaming response (tokens used not available in stream)
-              const COST_PER_1K_TOKENS: Record<string, number> = {
-                'gpt-4': 0.03,
-                'gpt-4-turbo': 0.01,
-                'gpt-3.5-turbo': 0.0015,
-                'groq': 0,
-                'requesty': 0,
-                'openrouter': 0,
-                'huggingface': 0,
-                'gemini': 0,
-                'fallback': 0
-              };
-
-              const paidCostPerToken = (COST_PER_1K_TOKENS[originalModel] || 0.03) / 1000;
-              const freeCostPerToken = (COST_PER_1K_TOKENS[tier.name] || 0) / 1000;
-              const tokensSaved = 0 * (paidCostPerToken - freeCostPerToken); // 0 tokens used in stream
-
-              // Record metrics for streaming response (tokens used not available in stream)
-              metricsTracker.recordCall(tier.name, originalModel, 0, tokensSaved);
+                      // Record metrics for streaming response (token count unavailable in stream)
+              metricsTracker.recordCall(tier.name, originalModel, 0, 0);
             } catch (err) {
               const latency = Date.now() - startTime;
               console.error(`[${new Date().toISOString()}] Stream interrupted on tier ${tier.name}: ${err}`);
@@ -282,7 +265,7 @@ export async function routeRequest(req: ChatCompletionRequest, c: Context): Prom
         tierStates[tier.name].disabledUntil = 0;
       }
 
-      return new Response(responseBody ? JSON.stringify(responseBody) : response.body, {
+      return new Response(responseBody ? JSON.stringify(responseBody) : '{}', {
         status: response.status,
         headers: responseHeaders,
       });
