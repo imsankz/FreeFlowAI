@@ -1,5 +1,13 @@
 {
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "framework": null
+  "framework": null,
+  "functions": {
+    "api/index.ts": {
+      "runtime": "edge"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index" }
+  ]
 }
