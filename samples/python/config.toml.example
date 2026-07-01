@@ -1,0 +1,17 @@
+# Example config.toml for FreeFlowAI Python integration
+# Copy this to ~/.eri-upload/config.toml (or your config directory)
+
+[gemini]
+gemini_api_key = "your-gemini-api-key-here"
+gemini_model = "gemini-2.5-pro"
+
+[notion]
+notion_token = "your-notion-token-here"
+video_projects_db_id = "your-video-projects-db-id-here"
+
+[freeflowai]
+freeflowai_base_url = "http://localhost:8787/v1"
+freeflowai_model = "gpt-4"
+
+[whisper]
+whisper_model = "mlx-community/whisper-large-v3-turbo"
