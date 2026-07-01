@@ -6,6 +6,7 @@ import { routeRequest } from './router.js';
 import { routeImageRequest } from './image_router.js';
 import { initializeFreeModelsManager } from './free-models-manager.js';
 import { UpdateModelsSkill } from './skills/update-models.js';
+import { AiHelperSkill } from './skills/ai-helper.js';
 import { initializeMetricsTracker, metricsTracker } from './metrics-tracker.js';
 import * as dotenv from 'dotenv';
 
@@ -30,6 +31,7 @@ app.get('/dashboard', serveStatic({ path: './public/index.html' }));
 
 // Register skills
 UpdateModelsSkill.register(app);
+AiHelperSkill.register(app);
 
 // Metrics endpoints
 app.get('/api/metrics', (c) => {
