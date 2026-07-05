@@ -2,6 +2,12 @@
 
 A **Zero-Config, Self-Healing Free-Tier Maximizer** designed for content creators and indie hackers. It runs locally or on edge functions, aggregates free-tier AI endpoints, and automatically handles failovers silently.
 
+> [!NOTE]
+> ## Project status
+> I’m stopping active development of **FreeFlowAI** because [OmniRoute](https://github.com/diegosouzapw/OmniRoute) already does this (free-tier routing + failover) exceptionally well.
+> 
+> I’ve been using OmniRoute for my own use case, but I’m keeping this repo public so the work can be available for everyone to fork, review, and improve.
+
 ---
 
 ## Architecture & Integration Modes
